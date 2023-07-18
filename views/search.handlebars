@@ -1,0 +1,31 @@
+<form action="/docs/search" method="post">
+  <div class="input-group mt-3">
+    <input type="text" name="search" id="search" class="form-control">
+    <button class="btn btn-primary" type="submit">Search</button>
+  </div>
+</form>
+
+<div class="accordion mt-3" id="accordionExample">
+  {{#each results}}
+    {{#with this}}
+    
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="heading-{{index}}">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{index}}" aria-expanded="true" aria-controls="collapse-{{index}}">
+            <a href="{{path}}">Result {{index}}</a>
+          </button>
+        </h2>
+        <div id="collapse-{{index}}" class="accordion-collapse collapse show" aria-labelledby="heading-{{index}}" data-bs-parent="#accordionExample">
+          <div class="accordion-body">
+            <p>{{text}}</p>
+          </div>
+        </div>
+      </div>
+      {{/with}}
+    {{/each}}
+
+</div>
+
+<ul>
+  
+</ul>
