@@ -1,8 +1,8 @@
-const fs = require('fs');
-
-module.exports = (doc) => {
+const text = (doc) => {
+  const fs = require('fs');
   const sentences = 3;
   const overlap = 1;
+
   try {
     let str = fs.readFileSync(doc, 'utf8');
     str = str.replace(/(\r\n|\n|\r)/gm, ' ');
@@ -31,3 +31,17 @@ module.exports = (doc) => {
     console.log(err);
   };
 };
+
+const pdf = (doc) => {
+  const pdfParser = require('pdf2json');
+
+  fs.readFile(doc, (err, pdfBuffer) => {
+    if (!err) {
+      pdfParser.parseBuffer(pdfBuffer);
+    } else {
+      console.log(err);
+    }
+  });
+};
+
+module.exports = {text, pdf};

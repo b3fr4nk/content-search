@@ -5,7 +5,7 @@ const upload = multer({dest: 'uploads/'});
 
 module.exports = (app) => {
   // Upload
-  app.get('/upload/text', (req, res) => {
+  app.get('/upload', (req, res) => {
     res.render('upload.handlebars');
   });
   app.post('/upload/text', upload.single('doc'), (req, res) => {
