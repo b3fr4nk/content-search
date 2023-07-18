@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 const {PineconeClient} = require('@pinecone-database/pinecone');
-const reader = require('./reader');
 const {tokenize} = require('./openai');
 
 const init = async () => {
@@ -59,4 +58,27 @@ const query = async (query) => {
   return queryResponse;
 };
 
-module.exports = {upsert, query, init};
+const initSQL = () => {
+  const {Client} = require('pg');
+
+  const client = new Client({
+    host: process.env.SQL_TEST,
+    port: 5334,
+    database: 'content-search',
+    user: 'hosting-db',
+  });
+
+  return client;
+};
+
+const SQLQuery = (query) => {
+  const client = initSQL();
+  client.connect();
+
+  const result = client.query(query);
+  console.log(result);
+
+  return result;
+};
+
+module.exports = {upsert, query, init, SQLQuery};
