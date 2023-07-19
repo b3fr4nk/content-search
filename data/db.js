@@ -63,15 +63,16 @@ const initSQL = () => {
 
   const client = new Client({
     host: process.env.SQL_TEST,
-    port: 5334,
-    database: 'content-search',
-    user: 'hosting-db',
+    port: 5432,
+    database: 'contentsearch',
+    user: 'postgres',
+    password: process.env.SQL_PASSWORD,
   });
 
   return client;
 };
 
-const SQLQuery = (query) => {
+const sqlQuery = (query) => {
   const client = initSQL();
   client.connect();
 
@@ -81,4 +82,21 @@ const SQLQuery = (query) => {
   return result;
 };
 
-module.exports = {upsert, query, init, SQLQuery};
+const sqlUpload = (doc) => {
+  const client = initSQL();
+  client.connect();
+
+  const text = 'INSERT INTO docs (doc) VALUES ($1) Returning *';
+  const values = [doc];
+
+  const res = client.query(text, values)
+      .then((err, res) => {
+        if (!err) {
+          console.log(res);
+        } else {
+          console.log(err);
+        }
+      });
+};
+
+module.exports = {upsert, query, init, sqlQuery, sqlUpload};

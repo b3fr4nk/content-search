@@ -10,7 +10,7 @@ module.exports = (app) => {
   });
   app.post('/upload/text', upload.single('doc'), (req, res) => {
     if (req.file) {
-      const doc = reader(req.file.path);
+      const doc = reader.text(req.file.path);
       let time = 0;
       for (let i = 1; i < doc.length; i++) {
         db.upsert(doc[i], `${req.file.path}-${i}`)
@@ -22,6 +22,7 @@ module.exports = (app) => {
               console.log(error);
             });
       };
+      db.sqlUpload(doc);
     }
     res.redirect('/docs/search');
   });
