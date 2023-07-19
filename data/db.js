@@ -82,12 +82,12 @@ const sqlQuery = (query) => {
   return result;
 };
 
-const sqlUpload = (doc) => {
+const sqlUpload = (doc, id) => {
   const client = initSQL();
   client.connect();
 
-  const text = 'INSERT INTO docs (doc) VALUES ($1) Returning *';
-  const values = [doc];
+  const text = 'INSERT INTO docs (doc, p_id) VALUES ($1, $2) Returning *';
+  const values = [doc, id];
 
   const res = client.query(text, values)
       .then((err, res) => {

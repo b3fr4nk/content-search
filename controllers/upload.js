@@ -22,7 +22,7 @@ module.exports = (app) => {
               console.log(error);
             });
       };
-      db.sqlUpload(doc);
+      db.sqlUpload(doc, req.file.path);
     }
     res.redirect('/docs/search');
   });
