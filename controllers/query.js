@@ -1,15 +1,21 @@
 /* eslint-disable max-len */
 const db = require('../data/db');
-const reader = require('../data/reader');
 
 module.exports = (app) => {
   app.get('/docs/document/:id', (req, res) => {
-    if (req.params.id) {
-      const text = reader(`./uploads/${req.params.id}`);
-
-      res.render('doc.handlebars', {text});
+    if (req.params.id && typeof req.params.id === 'string') {
+      const file = req.params.id;
+      // eslint-disable-next-line no-unused-vars
+      const query = db.sqlQuery(`SELECT doc FROM docs WHERE p_id = '${file}'`)
+          .then(function(result) {
+            return res.render('doc.handlebars', {text: result.rows[0].doc.replace(/\{\s*\"|\s*\"\}/g, '')});
+          },
+          function(error) {
+            console.log(error);
+          });
+    } else {
+      return res.status(404);
     }
-    return res.status(404);
   });
 
   // Search
@@ -26,8 +32,8 @@ module.exports = (app) => {
               for (let i = 0; i < value.matches.length; i++) {
                 // TODO make the link to the doc work
                 const text = value.matches[i].metadata.text;
-                const file = value.matches[i].metadata.filepath.split('/')[1].split('-')[0];
-                results.push({text: text, path: `/docs/document/${file}`, index: i+1});
+                const file = value.matches[i].metadata.filepath.split('-')[0];
+                results.push({text: text, path: `${file}`, index: i+1});
               }
               const end = Date.now();
               console.log(`Query time: ${end - start}ms`);
@@ -37,5 +43,9 @@ module.exports = (app) => {
               console.log(error);
             },
         );
+  });
+
+  app.get('docs/full/:id', (req, res) => {
+
   });
 };

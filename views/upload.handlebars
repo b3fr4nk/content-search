@@ -1,6 +1,29 @@
-<form method="post" action="/docs/upload" enctype="multipart/form-data">
-  <div class="input-group mt-3">
-    <input class="form-control" type="file" name="doc">
-    <button class="btn btn-primary">Upload</button>
+<form class="container" method="post" action="/upload/text" enctype="multipart/form-data">
+
+  <div class="row">
+    <div class="column">
+      <div class="input-group mt-3">
+        <input class="form-control" type="file" name="doc">
+        <button class="btn btn-primary">Upload</button>
+      </div>
+    </div>
   </div>
+  
+  <div class="row">
+    <div class="col-4"></div>
+    <div class="col-4">
+      <div class="h4">Or</div>
+    </div>
+    <div class="col-4"></div>
+  </div>
+
+  <div class="row">
+    <div class="column">
+      <div class="input-group mt-3">
+        <input class="form-control" type="text" name="doc" placeholder="URL">
+        <button class="btn btn-primary">Upload</button>
+      </div>
+    </div>
+  </div>
+
 </form>

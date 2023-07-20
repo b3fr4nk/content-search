@@ -12,8 +12,10 @@ module.exports = (app) => {
     if (req.file) {
       const doc = reader.text(req.file.path);
       let time = 0;
+      const id = req.file.path.split('/')[1];
+      console.log(id);
       for (let i = 1; i < doc.length; i++) {
-        db.upsert(doc[i], `${req.file.path}-${i}`)
+        db.upsert(doc[i], `${id}-${i}`)
             .then(function(value) {
               time += value;
               console.log(time);
@@ -22,7 +24,7 @@ module.exports = (app) => {
               console.log(error);
             });
       };
-      db.sqlUpload(doc, req.file.path);
+      db.sqlUpload(doc, id);
     }
     res.redirect('/docs/search');
   });

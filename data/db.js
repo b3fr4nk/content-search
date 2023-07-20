@@ -72,14 +72,13 @@ const initSQL = () => {
   return client;
 };
 
-const sqlQuery = (query) => {
-  const client = initSQL();
+const sqlQuery = async (query) => {
+  const client = await initSQL();
   client.connect();
 
-  const result = client.query(query);
-  console.log(result);
+  const result = await client.query(query);
 
-  return result;
+  return await result;
 };
 
 const sqlUpload = (doc, id) => {
