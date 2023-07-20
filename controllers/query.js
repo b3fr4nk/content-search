@@ -44,8 +44,4 @@ module.exports = (app) => {
             },
         );
   });
-
-  app.get('docs/full/:id', (req, res) => {
-
-  });
 };
