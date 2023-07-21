@@ -16,7 +16,6 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({storage: storage});
-
 module.exports = (app) => {
   // Upload
 
@@ -46,12 +45,10 @@ module.exports = (app) => {
 
   app.post('/upload/pdf', upload.single('doc'), (req, res) => {
     if (req.file) {
-      // eslint-disable-next-line no-unused-vars
-      const file = reader.pdfReader(req.file.path)
+      const file = reader.pdf(req.file.path)
           .then((doc) => {
             let time = 0;
-            const len = req.file.path.split('/').length;
-            const id = req.file.path.split('/')[len-1];
+            const id = req.file.path.split('/')[1];
             for (let i = 1; i < doc.length; i++) {
               db.upsert(doc[i], `${id}-${i}`)
                   .then(function(value) {
