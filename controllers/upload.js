@@ -18,7 +18,6 @@ const storage = multer.diskStorage({
 const upload = multer({storage: storage});
 module.exports = (app) => {
   // Upload
-
   app.get('/upload', (req, res) => {
     res.render('upload.handlebars');
   });
