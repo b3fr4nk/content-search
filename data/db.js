@@ -30,7 +30,7 @@ const upsert = async (str, id) => {
         },
       },
     ],
-    namespace: 'test-3+1',
+    namespace: '3+1',
   };
 
   const upsertResponse = await index.upsert({upsertRequest: upsertRequest});
@@ -50,7 +50,7 @@ const query = async (query) => {
     topK: 3,
     includeValues: true,
     includeMetadata: true,
-    namespace: 'test-3+1',
+    namespace: '3+1',
   };
 
   const queryResponse = await index.query({queryRequest: queryRequest});

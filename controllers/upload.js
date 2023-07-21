@@ -27,7 +27,8 @@ module.exports = (app) => {
     if (req.file) {
       const doc = reader.text(req.file.path);
       let time = 0;
-      const id = req.file.path.split('/').slice(-1);
+      const len = req.file.path.split('/').length;
+      const id = req.file.path.split('/')[len-1];
       for (let i = 1; i < doc.length; i++) {
         db.upsert(doc[i], `${id}-${i}`)
             .then(function(value) {
@@ -45,10 +46,12 @@ module.exports = (app) => {
 
   app.post('/upload/pdf', upload.single('doc'), (req, res) => {
     if (req.file) {
-      const file = reader.pdf(req.file.path)
+      // eslint-disable-next-line no-unused-vars
+      const file = reader.pdfReader(req.file.path)
           .then((doc) => {
             let time = 0;
-            const id = req.file.path.split('/')[1];
+            const len = req.file.path.split('/').length;
+            const id = req.file.path.split('/')[len-1];
             for (let i = 1; i < doc.length; i++) {
               db.upsert(doc[i], `${id}-${i}`)
                   .then(function(value) {
