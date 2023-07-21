@@ -6,8 +6,6 @@ if (document.querySelector('#upload')) {
 
     const fileType = document.getElementById('fileUp').value.split('.')[1];
 
-    console.log(fileType);
-
     if (fileType === 'txt') {
       axios.post('/upload/text', doc)
           .then(function(response) {
