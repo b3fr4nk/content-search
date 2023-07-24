@@ -1,8 +1,22 @@
 <form action="/docs/search" method="post">
-  <div class="input-group mt-3">
-    <input type="text" name="search" id="search" class="form-control">
-    <button class="btn btn-primary" type="submit">Search</button>
+
+  <div class="row">
+    <div class="col-4">
+      <div class="input-group mt-3">
+        <input type="text" name="namespace" id="namespace" placeholder="course code">
+      </div>
+    </div>
   </div>
+
+  <div class="row">
+    <div class="col">
+      <div class="input-group mt-3">
+        <input type="text" name="search" id="search" class="form-control">
+        <button class="btn btn-primary" type="submit">Search</button>
+      </div>
+    </div>
+  </div>
+  
 </form>
 
 <div class="accordion mt-3" id="accordionExample">

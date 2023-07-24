@@ -54,7 +54,7 @@ const query = async (query) => {
   };
 
   const queryResponse = await index.query({queryRequest: queryRequest});
-  console.log(queryResponse);
+  // console.log(queryResponse);
   return queryResponse;
 };
 
@@ -89,9 +89,9 @@ const sqlUpload = (doc, id) => {
   const values = [doc, id];
 
   const res = client.query(text, values)
-      .then((err, res) => {
+      .then((res, err) => {
         if (!err) {
-          console.log(res);
+          // console.log(res);
         } else {
           console.log(err);
         }

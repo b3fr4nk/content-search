@@ -80,4 +80,32 @@ const pdfReader = (doc) => {
   });
 };
 
-module.exports = {text, pdfReader};
+const wordReader = async (path) => {
+  const pizZip = require('pizzip');
+  const Docxtemplater = require('docxtemplater');
+  const fs = require('fs');
+
+  // Load the .docx file content
+  const content = fs.readFileSync(path, 'binary');
+
+  const zip = pizZip(content);
+
+  const doc = new Docxtemplater(zip, {
+    paragraphLoop: true,
+    linebreaks: true,
+  });
+
+  // Render the document (Replace {first_name} by John, {last_name} by Doe, ...)
+  doc.render({
+    first_name: 'John',
+    last_name: 'Doe',
+    phone: '0652455478',
+    description: 'New Website',
+  });
+
+  const text = doc.getFullText().replace(/\//g, ' ').replace(/\//g, '');
+
+  return splitText(text);
+};
+
+module.exports = {text, pdfReader, wordReader};
