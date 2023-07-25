@@ -22,6 +22,23 @@ const storage = multer.diskStorage({
   },
 });
 
+const pineconeUpload = (doc, path) => {
+  let time = 0;
+  const len = path.split('/').length;
+  const id = path.split('/')[len-1];
+  for (let i = 1; i < doc.length; i++) {
+    db.upsert(doc[i], `${id}-${i}`)
+        .then(function(value) {
+          time += value;
+          console.log(time);
+        },
+        function(error) {
+          console.log(error);
+        });
+  };
+  db.sqlUpload(doc, id);
+};
+
 const upload = multer({storage: storage});
 module.exports = (app) => {
   // Upload
@@ -56,20 +73,7 @@ module.exports = (app) => {
       // eslint-disable-next-line no-unused-vars
       const file = reader.pdfReader(req.file.path)
           .then((doc) => {
-            let time = 0;
-            const len = req.file.path.split('/').length;
-            const id = req.file.path.split('/')[len-1];
-            for (let i = 1; i < doc.length; i++) {
-              db.upsert(doc[i], `${id}-${i}`)
-                  .then(function(value) {
-                    time += value;
-                    console.log(time);
-                  },
-                  function(error) {
-                    console.log(error);
-                  });
-            };
-            db.sqlUpload(doc, id);
+            pineconeUpload(doc, req.file.path);
           });
     }
     res.redirect('/docs/search');
@@ -80,20 +84,7 @@ module.exports = (app) => {
       // eslint-disable-next-line no-unused-vars
       const file = reader.wordReader(req.file.path)
           .then((doc) => {
-            let time = 0;
-            const len = req.file.path.split('/').length;
-            const id = req.file.path.split('/')[len-1];
-            for (let i = 1; i < doc.length; i++) {
-              db.upsert(doc[i], `${id}-${i}`)
-                  .then(function(value) {
-                    time += value;
-                    console.log(time);
-                  },
-                  function(error) {
-                    console.log(error);
-                  });
-            };
-            db.sqlUpload(doc, id);
+            pineconeUpload(doc, req.file.path);
           });
     }
     res.redirect('/docs/search');
