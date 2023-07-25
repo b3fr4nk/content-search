@@ -22,12 +22,12 @@ const storage = multer.diskStorage({
   },
 });
 
-const pineconeUpload = (doc, path) => {
+const pineconeUpload = (doc, path, namespace) => {
   let time = 0;
   const len = path.split('/').length;
   const id = path.split('/')[len-1];
   for (let i = 1; i < doc.length; i++) {
-    db.upsert(doc[i], `${id}-${i}`)
+    db.upsert(doc[i], `${id}-${i}`, namespace)
         .then(function(value) {
           time += value;
           console.log(time);
@@ -50,20 +50,7 @@ module.exports = (app) => {
   app.post('/upload/text', upload.single('doc'), (req, res) => {
     if (req.file) {
       const doc = reader.text(req.file.path);
-      let time = 0;
-      const len = req.file.path.split('/').length;
-      const id = req.file.path.split('/')[len-1];
-      for (let i = 1; i < doc.length; i++) {
-        db.upsert(doc[i], `${id}-${i}`)
-            .then(function(value) {
-              time += value;
-              console.log(time);
-            },
-            function(error) {
-              console.log(error);
-            });
-      };
-      db.sqlUpload(doc, id);
+      pineconeUpload(doc, req.file.path, req.body.namespace);
     }
     res.redirect('/docs/search');
   });
@@ -73,7 +60,7 @@ module.exports = (app) => {
       // eslint-disable-next-line no-unused-vars
       const file = reader.pdfReader(req.file.path)
           .then((doc) => {
-            pineconeUpload(doc, req.file.path);
+            pineconeUpload(doc, req.file.path, req.body.namespace);
           });
     }
     res.redirect('/docs/search');
@@ -84,7 +71,7 @@ module.exports = (app) => {
       // eslint-disable-next-line no-unused-vars
       const file = reader.wordReader(req.file.path)
           .then((doc) => {
-            pineconeUpload(doc, req.file.path);
+            pineconeUpload(doc, req.file.path, req.body.namespace);
           });
     }
     res.redirect('/docs/search');

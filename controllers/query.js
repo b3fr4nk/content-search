@@ -25,7 +25,7 @@ module.exports = (app) => {
 
   app.post('/docs/search', (req, res) => {
     const start = Date.now();
-    db.query(req.body.search)
+    db.query(req.body.search, req.body.namespace)
         .then(
             function(value) {
               const results = [];

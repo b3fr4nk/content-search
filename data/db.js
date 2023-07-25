@@ -11,7 +11,7 @@ const init = async () => {
   return pinecone;
 };
 
-const upsert = async (str, id) => {
+const upsert = async (str, id, namespace) => {
   const start = Date.now();
   pinecone = await init();
   // eslint-disable-next-line new-cap
@@ -30,7 +30,7 @@ const upsert = async (str, id) => {
         },
       },
     ],
-    namespace: '3+1',
+    namespace: namespace,
   };
 
   const upsertResponse = await index.upsert({upsertRequest: upsertRequest});
@@ -38,7 +38,7 @@ const upsert = async (str, id) => {
   return end - start;
 };
 
-const query = async (query) => {
+const query = async (query, namespace) => {
   pinecone = await init();
   // eslint-disable-next-line new-cap
   const index = pinecone.Index('content-search');
@@ -50,7 +50,7 @@ const query = async (query) => {
     topK: 3,
     includeValues: true,
     includeMetadata: true,
-    namespace: '3+1',
+    namespace: namespace,
   };
 
   const queryResponse = await index.query({queryRequest: queryRequest});
