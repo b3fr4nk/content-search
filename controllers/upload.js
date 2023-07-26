@@ -1,8 +1,10 @@
+/* eslint-disable max-len */
+/* eslint-disable no-unused-vars */
 const multer = require('multer');
 const db = require('../data/db');
 const reader = require('../data/reader');
-// eslint-disable-next-line max-len
 const wordExt = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+const pptExt = 'application/vnd.openxmlformats-officedocument.presentationml.presentation';
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
     cb(null, 'uploads/docs');
@@ -16,6 +18,8 @@ const storage = multer.diskStorage({
       cb(null, file.fieldname + '_' + uniqueSuffix + '.pdf');
     } else if (file.mimetype === wordExt) {
       cb(null, file.fieldname + '_' + uniqueSuffix + '.docx');
+    } else if (file.mimetype === pptExt) {
+      cb(null, file.fieldname + '_' + uniqueSuffix + '.pptx');
     } else {
       cb(null, file.fieldname + '_' + uniqueSuffix + '.txt');
     }
@@ -68,12 +72,21 @@ module.exports = (app) => {
 
   app.post('/upload/word', upload.single('doc'), (req, res) => {
     if (req.file) {
-      // eslint-disable-next-line no-unused-vars
       const file = reader.wordReader(req.file.path)
           .then((doc) => {
             pineconeUpload(doc, req.file.path, req.body.namespace);
           });
     }
     res.redirect('/docs/search');
+  });
+
+  app.post('/upload/ppt', upload.single('doc'), (req, res) => {
+    if (req.file) {
+      const file = reader.pptReader(req.file.path)
+          .then((doc) => {
+            pineconeUpload(doc, req.file.path, req.body.namespace);
+          });
+      res.redirect('/docs/search');
+    }
   });
 };

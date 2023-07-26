@@ -21,6 +21,11 @@ if (document.querySelector('#upload')) {
           .then(function(result) {
             window.location.replace('/docs/search');
           });
+    } else if (fileType === 'pptx') {
+      axios.post('/upload/ppt', doc)
+          .then(function(result) {
+            window.location.replace('/docs/search');
+          });
     } else {
       const alert = document.getElementById('alert');
       alert.classList.add('alert-warning');

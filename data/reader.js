@@ -108,4 +108,12 @@ const wordReader = async (path) => {
   return splitText(text);
 };
 
-module.exports = {text, pdfReader, wordReader};
+const pptReader = async (doc) => {
+  const officeParser = require('officeparser');
+  return officeParser.parseOfficeAsync(doc)
+      .then((data) => {
+        console.log(data);
+        return splitText(data);
+      });
+};
+module.exports = {text, pdfReader, wordReader, pptReader};
