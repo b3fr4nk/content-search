@@ -5,7 +5,7 @@ const reader = require('../data/reader');
 const wordExt = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
-    cb(null, 'tmp/uploads');
+    cb(null, 'uploads/docs');
   },
   filename: function(req, file, cb) {
     const uniqueSuffix = Date.now() + '_' + Math.round(Math.random() * 1E9);
@@ -36,7 +36,7 @@ const pineconeUpload = (doc, path, namespace) => {
           console.log(error);
         });
   };
-  db.sqlUpload(doc, id);
+  db.sqlUpload(path, id);
 };
 
 const upload = multer({storage: storage});

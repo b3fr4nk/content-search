@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 const db = require('../data/db');
+const path = require('path');
 
 module.exports = (app) => {
   app.get('/docs/document/:id', (req, res) => {
@@ -8,8 +9,9 @@ module.exports = (app) => {
       // eslint-disable-next-line no-unused-vars
       const query = db.sqlQuery(`SELECT doc FROM docs WHERE p_id = '${file}'`)
           .then(function(result) {
-            const doc = result.rows[0].doc.replace(/\{\s*\"|\s*\"\}/g, '');
-            return res.render('doc.handlebars', {text: doc});
+            const doc = result.rows[0].doc;
+            // return res.render('doc.handlebars', {text: doc});
+            res.sendFile(path.resolve(`${doc}`));
           },
           function(error) {
             console.log(error);
