@@ -33,7 +33,6 @@ module.exports = (app) => {
             function(value) {
               const results = [];
               for (let i = 0; i < value.matches.length; i++) {
-                // TODO make the link to the doc work
                 const text = value.matches[i].metadata.text;
                 const score = value.matches[i].score * 100;
                 const file = value.matches[i].metadata.filepath.split('-')[0];
