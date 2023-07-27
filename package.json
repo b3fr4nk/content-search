@@ -24,7 +24,8 @@
     "openai": "^3.3.0",
     "pdfjs-dist": "^3.8.162",
     "pg": "^8.11.1",
-    "pizzip": "^3.1.4"
+    "pizzip": "^3.1.4",
+    "read-excel-file": "^5.6.1"
   },
   "devDependencies": {
     "eslint": "^8.45.0",

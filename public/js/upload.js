@@ -26,6 +26,11 @@ if (document.querySelector('#upload')) {
           .then(function(result) {
             window.location.replace('/docs/search');
           });
+    } else if (fileType === 'xlsx') {
+      axios.post('upload/excel', doc)
+          .then(function(result) {
+            window.location.replace('/docs/search');
+          });
     } else {
       const alert = document.getElementById('alert');
       alert.classList.add('alert-warning');

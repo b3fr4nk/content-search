@@ -4,7 +4,9 @@ const splitText = (str) => {
   const overlap = 1;
 
   str = str.replace(/(\r\n|\n|\r)/gm, ' ');
-  str = str.replace(/([.?!])\s*(?=[A-Z])/g, '$1|').split('|');
+  str = str.replace(/([.?!])\s*/g, '$1|').split('|');
+
+  console.log('string: ' + str);
 
   // splits string into number of sentences with number of overlap sentences
   const data = [];
@@ -112,8 +114,28 @@ const pptReader = async (doc) => {
   const officeParser = require('officeparser');
   return officeParser.parseOfficeAsync(doc)
       .then((data) => {
-        console.log(data);
         return splitText(data);
       });
 };
-module.exports = {text, pdfReader, wordReader, pptReader};
+
+const excelReader = async (doc) => {
+  const readXlsxFile = require('read-excel-file/node');
+
+  console.log(doc);
+
+  const data = await readXlsxFile(doc).then((rows) => {
+    let text = '';
+    rows.forEach((row) => {
+      row.forEach((cell) => {
+        text += ' ' + cell;
+      });
+      text += '.';
+    });
+    return (splitText(text));
+  });
+
+  console.log(data);
+
+  return data;
+};
+module.exports = {text, pdfReader, wordReader, pptReader, excelReader};
