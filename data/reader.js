@@ -145,7 +145,7 @@ const youtubeReader = async (id) => {
     result.forEach((caption) => {
       text += `${caption.text}. `;
     });
-    return splitText(text, sentences=10);
+    return splitText(text);
   });
   return transcript;
 };

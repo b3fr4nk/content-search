@@ -3,7 +3,6 @@
 const multer = require('multer');
 const db = require('../data/db');
 const reader = require('../data/reader');
-const {default: axios} = require('axios');
 const wordExt = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
 const pptExt = 'application/vnd.openxmlformats-officedocument.presentationml.presentation';
 const xlsxExt = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
@@ -113,5 +112,6 @@ module.exports = (app) => {
         pineconeUpload(result, req.body.url, req.body.namespace);
       });
     }
+    res.redirect('/docs/search');
   });
 };

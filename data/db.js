@@ -15,7 +15,7 @@ const upsert = async (str, id, namespace) => {
   const start = Date.now();
   pinecone = await init();
   // eslint-disable-next-line new-cap
-  const index = pinecone.Index('content-search');
+  const index = pinecone.Index('content-search-index');
 
   const data = await tokenize(str);
 
@@ -41,7 +41,7 @@ const upsert = async (str, id, namespace) => {
 const query = async (query, namespace) => {
   pinecone = await init();
   // eslint-disable-next-line new-cap
-  const index = pinecone.Index('content-search');
+  const index = pinecone.Index('content-search-index');
 
   const vector = await tokenize(query);
 
