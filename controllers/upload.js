@@ -3,6 +3,7 @@
 const multer = require('multer');
 const db = require('../data/db');
 const reader = require('../data/reader');
+const {default: axios} = require('axios');
 const wordExt = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
 const pptExt = 'application/vnd.openxmlformats-officedocument.presentationml.presentation';
 const xlsxExt = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
@@ -13,7 +14,7 @@ const storage = multer.diskStorage({
   filename: function(req, file, cb) {
     const uniqueSuffix = Date.now() + '_' + Math.round(Math.random() * 1E9);
 
-    console.log(file.mimetype);
+    // console.log(file.mimetype);
 
     if (file.mimetype === 'application/pdf') {
       cb(null, file.fieldname + '_' + uniqueSuffix + '.pdf');
@@ -101,6 +102,16 @@ module.exports = (app) => {
             pineconeUpload(doc, req.file.path, req.body.namespace);
           });
       res.redirect('/docs/search');
+    }
+  });
+
+  app.post('/upload/youtube', upload.single('doc'), (req, res) => {
+    if (req.body.url) {
+      const id = req.body.url.split('=')[1].split('&')[0];
+      const captions = reader.youtubeReader(id).then((result) => {
+        console.log(result.length);
+        pineconeUpload(result, req.body.url, req.body.namespace);
+      });
     }
   });
 };
