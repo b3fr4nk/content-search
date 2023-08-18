@@ -1,6 +1,5 @@
 /* eslint-disable max-len */
-const splitText = (str) => {
-  const sentences = 3;
+const splitText = (str, sentences=3) => {
   const overlap = 1;
 
   str = str.replace(/(\r\n|\n|\r)/gm, ' ');
@@ -138,4 +137,17 @@ const excelReader = async (doc) => {
 
   return data;
 };
-module.exports = {text, pdfReader, wordReader, pptReader, excelReader};
+
+const youtubeReader = async (id) => {
+  const youtubeTranscript = require('youtube-transcript');
+  const transcript = youtubeTranscript.YoutubeTranscript.fetchTranscript(id).then((result) => {
+    let text = '';
+    result.forEach((caption) => {
+      text += `${caption.text}. `;
+    });
+    return splitText(text);
+  });
+  return transcript;
+};
+
+module.exports = {text, pdfReader, wordReader, pptReader, excelReader, youtubeReader};
