@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+/* eslint-disable new-cap */
 /* eslint-disable no-unused-vars */
 const {PineconeClient} = require('@pinecone-database/pinecone');
 const {tokenize} = require('./openai');
@@ -110,4 +112,25 @@ const deleteAll = async (namespace) => {
   });
 };
 
-module.exports = {upsert, query, init, sqlQuery, sqlUpload, deleteAll};
+const estimatePineconeDocCount = async (namespace) => {
+  const pinecone = await init();
+
+  const index = pinecone.Index('content-search');
+  const describeIndexStatsQuery = {filter: {}, describeIndexStatsRequest: {}};
+
+  const results = (await index.describeIndexStats(describeIndexStatsQuery)).totalVectorCount;
+
+  return await results;
+};
+
+const estimateSQLDocCount = async () => {
+  const client = await initSQL();
+
+  client.connect();
+  const results = (await client.query('SELECT COUNT(*) FROM docs')).rows[0].count;
+
+  return await results;
+};
+
+// eslint-disable-next-line max-len
+module.exports = {upsert, query, init, sqlQuery, sqlUpload, deleteAll, estimatePineconeDocCount, estimateSQLDocCount};
