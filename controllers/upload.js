@@ -34,7 +34,7 @@ const pineconeUpload = (doc, path, namespace) => {
   const len = path.split('/').length;
   const id = path.split('/')[len-1];
   for (let i = 1; i < doc.length; i++) {
-    db.upsert(doc[i], `${id}-${i}`, namespace)
+    db.upsert(doc[i], `${id}-${i}`, namespace, path)
         .then(function(value) {
           time += value;
           console.log(time);
@@ -56,18 +56,28 @@ module.exports = (app) => {
 
   app.post('/upload/text', upload.single('doc'), (req, res) => {
     if (req.file) {
+      const len = req.file.path.split('/').length;
+      const id = req.file.path.split('/')[len-1];
+
+      console.log(id);
+
       const doc = reader.text(req.file.path);
-      pineconeUpload(doc, req.file.path, req.body.namespace);
+      pineconeUpload(doc, id, req.body.namespace);
     }
     res.redirect('/docs/search');
   });
 
   app.post('/upload/pdf', upload.single('doc'), (req, res) => {
     if (req.file) {
+      const len = req.file.path.split('/').length;
+      const id = req.file.path.split('/')[len-1];
+
+      console.log(id);
+
       // eslint-disable-next-line no-unused-vars
       const file = reader.pdfReader(req.file.path)
           .then((doc) => {
-            pineconeUpload(doc, req.file.path, req.body.namespace);
+            pineconeUpload(doc, id, req.body.namespace);
           });
     }
     res.redirect('/docs/search');
@@ -75,9 +85,12 @@ module.exports = (app) => {
 
   app.post('/upload/word', upload.single('doc'), (req, res) => {
     if (req.file) {
+      const len = req.file.path.split('/').length;
+      const id = req.file.path.split('/')[len-1];
+
       const file = reader.wordReader(req.file.path)
           .then((doc) => {
-            pineconeUpload(doc, req.file.path, req.body.namespace);
+            pineconeUpload(doc, id, req.body.namespace);
           });
     }
     res.redirect('/docs/search');
@@ -85,9 +98,12 @@ module.exports = (app) => {
 
   app.post('/upload/ppt', upload.single('doc'), (req, res) => {
     if (req.file) {
+      const len = req.file.path.split('/').length;
+      const id = req.file.path.split('/')[0];
+
       const file = reader.pptReader(req.file.path)
           .then((doc) => {
-            pineconeUpload(doc, req.file.path, req.body.namespace);
+            pineconeUpload(doc, id, req.body.namespace);
           });
       res.redirect('/docs/search');
     }
@@ -95,10 +111,12 @@ module.exports = (app) => {
 
   app.post('/upload/excel', upload.single('doc'), (req, res) => {
     if (req.file) {
+      const len = req.file.path.split('/').length;
+      const id = req.file.path.split('/')[len-1];
+
       const file = reader.excelReader(req.file.path)
           .then((doc) => {
-            console.log('doc: ' + doc);
-            pineconeUpload(doc, req.file.path, req.body.namespace);
+            pineconeUpload(doc, id, req.body.namespace);
           });
       res.redirect('/docs/search');
     }
@@ -106,10 +124,10 @@ module.exports = (app) => {
 
   app.post('/upload/youtube', upload.single('doc'), (req, res) => {
     if (req.body.url) {
+      console.log(req.body.url);
       const id = req.body.url.split('=')[1].split('&')[0];
       const captions = reader.youtubeReader(id).then((result) => {
-        console.log(result.length);
-        pineconeUpload(result, req.body.url, req.body.namespace);
+        pineconeUpload(result, `${req.body.url}`, req.body.namespace);
       });
     }
     res.redirect('/docs/search');

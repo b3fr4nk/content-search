@@ -11,11 +11,11 @@ const init = async () => {
   return pinecone;
 };
 
-const upsert = async (str, id, namespace) => {
+const upsert = async (str, id, namespace, path) => {
   const start = Date.now();
   pinecone = await init();
   // eslint-disable-next-line new-cap
-  const index = pinecone.Index('content-search-index');
+  const index = pinecone.Index('content-search');
 
   const data = await tokenize(str);
 
@@ -26,7 +26,7 @@ const upsert = async (str, id, namespace) => {
         values: data,
         metadata: {
           text: str,
-          filepath: id,
+          filepath: path,
         },
       },
     ],
@@ -41,7 +41,7 @@ const upsert = async (str, id, namespace) => {
 const query = async (query, namespace) => {
   pinecone = await init();
   // eslint-disable-next-line new-cap
-  const index = pinecone.Index('content-search-index');
+  const index = pinecone.Index('content-search');
 
   const vector = await tokenize(query);
 
@@ -91,11 +91,23 @@ const sqlUpload = (doc, id) => {
   const res = client.query(text, values)
       .then((res, err) => {
         if (!err) {
-          // console.log(res);
+          console.log(res);
         } if (err) {
           console.log(err);
         }
       });
 };
 
-module.exports = {upsert, query, init, sqlQuery, sqlUpload};
+const deleteAll = async (namespace) => {
+  const pinecone = await init();
+
+  // eslint-disable-next-line new-cap
+  const index = pinecone.Index('content-search');
+
+  await index.delete1({
+    deleteAll: true,
+    namespace,
+  });
+};
+
+module.exports = {upsert, query, init, sqlQuery, sqlUpload, deleteAll};
