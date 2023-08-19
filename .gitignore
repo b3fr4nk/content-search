@@ -2,3 +2,4 @@
 /uploads/docs
 .env
 /tmp
+/test/files
