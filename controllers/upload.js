@@ -29,19 +29,39 @@ const storage = multer.diskStorage({
   },
 });
 
-const pineconeUpload = (doc, path, namespace) => {
+const pineconeUpload = (doc, path, namespace, video=false) => {
   let time = 0;
+
   const len = path.split('/').length;
-  const id = path.split('/')[len-1];
+  let id = path.split('/')[len-1];
   for (let i = 1; i < doc.length; i++) {
-    db.upsert(doc[i], `${id}-${i}`, namespace, path)
-        .then(function(value) {
-          time += value;
-          console.log(time);
-        },
-        function(error) {
-          console.log(error);
-        });
+    let data = doc[i];
+    // get time stamp for url
+    if (video) {
+      const mins = Math.floor(data[1]/60000);
+      const secs = Math.floor(data[1]/1000) - mins*60;
+      const timestamp = `&t=${mins}m${secs}s`;
+      id = timestamp;
+      data = data[0];
+
+      db.upsert(data, `${id}`, namespace, path)
+          .then(function(value) {
+            time += value;
+            console.log(time);
+          },
+          function(error) {
+            console.log(error);
+          });
+    } else {
+      db.upsert(data, `${id}-${i}`, namespace, path)
+          .then(function(value) {
+            time += value;
+            console.log(time);
+          },
+          function(error) {
+            console.log(error);
+          });
+    }
   };
   db.sqlUpload(path, id);
 };
@@ -59,7 +79,6 @@ module.exports = (app) => {
       const len = req.file.path.split('/').length;
       const id = req.file.path.split('/')[len-1];
 
-      console.log(id);
 
       const doc = reader.text(req.file.path);
       pineconeUpload(doc, id, req.body.namespace);
@@ -71,8 +90,6 @@ module.exports = (app) => {
     if (req.file) {
       const len = req.file.path.split('/').length;
       const id = req.file.path.split('/')[len-1];
-
-      console.log(id);
 
       // eslint-disable-next-line no-unused-vars
       const file = reader.pdfReader(req.file.path)
@@ -124,10 +141,9 @@ module.exports = (app) => {
 
   app.post('/upload/youtube', upload.single('doc'), (req, res) => {
     if (req.body.url) {
-      console.log(req.body.url);
       const id = req.body.url.split('=')[1].split('&')[0];
       const captions = reader.youtubeReader(id).then((result) => {
-        pineconeUpload(result, `${req.body.url}`, req.body.namespace);
+        pineconeUpload(result, `${req.body.url}`, req.body.namespace, video=true);
       });
     }
     res.redirect('/docs/search');

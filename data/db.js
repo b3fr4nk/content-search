@@ -93,7 +93,7 @@ const sqlUpload = (doc, id) => {
   const res = client.query(text, values)
       .then((res, err) => {
         if (!err) {
-          console.log(res);
+          // console.log(res);
         } if (err) {
           console.log(err);
         }

@@ -5,8 +5,6 @@ const splitText = (str, sentences=3) => {
   str = str.replace(/(\r\n|\n|\r)/gm, ' ');
   str = str.replace(/([.?!])\s*/g, '$1|').split('|');
 
-  console.log('string: ' + str);
-
   // splits string into number of sentences with number of overlap sentences
   const data = [];
   for (let i = sentences; i < str.length; i+=sentences) {
@@ -120,8 +118,6 @@ const pptReader = async (doc) => {
 const excelReader = async (doc) => {
   const readXlsxFile = require('read-excel-file/node');
 
-  console.log(doc);
-
   const data = await readXlsxFile(doc).then((rows) => {
     let text = '';
     rows.forEach((row) => {
@@ -133,20 +129,19 @@ const excelReader = async (doc) => {
     return (splitText(text));
   });
 
-  console.log(data);
-
   return data;
 };
 
 const youtubeReader = async (id) => {
   const youtubeTranscript = require('youtube-transcript');
   const transcript = youtubeTranscript.YoutubeTranscript.fetchTranscript(id).then((result) => {
-    let text = '';
+    const captions = [];
     result.forEach((caption) => {
-      text += `${caption.text}. `;
+      captions.push([caption.text, caption.offset]);
     });
-    return splitText(text);
+    return captions;
   });
+
   return transcript;
 };
 

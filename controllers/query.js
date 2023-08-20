@@ -44,7 +44,7 @@ module.exports = (app) => {
                 const score = value.matches[i].score * 100;
                 const file = value.matches[i].metadata.filepath.split('-')[0];
                 if (/\.com/.test(file)) {
-                  results.push({text: text, path: `${file}`, score: score.toFixed(2), index: i+1});
+                  results.push({text: text, path: `${file}${value.matches[i].id}`, score: score.toFixed(2), index: i+1});
                 } else {
                   const path = file.split('/')[0];
                   console.log(path);
