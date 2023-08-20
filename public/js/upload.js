@@ -57,7 +57,6 @@ if (document.querySelector('#urlUpload')) {
       const type = url.split('.')[1];
 
       if (type === 'youtube') {
-        console.log(doc);
         axios.post('/upload/youtube', doc)
             .then(function(result) {
               window.location.replace('/docs/search');
