@@ -7,4 +7,4 @@ Content search can/will upload PDF documents, Office documents (word, excel, pow
 will search using a logical separation and a query. Will return a relevancy score, the original text, and a link to the original document.
 
 ## Tech stack
-Node, express, pinecone, PostgreSQL, bullmq, and redis.
+Node, express, pinecone, and PostgreSQL.
